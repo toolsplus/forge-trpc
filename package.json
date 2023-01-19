@@ -10,10 +10,10 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@forge/bridge": "^2.5.0",
-    "@forge/resolver": "^1.4.8",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-angular": "^17.4.2",
+    "@forge/bridge": "^2.5.0",
+    "@forge/resolver": "^1.4.8",
     "@nrwl/eslint-plugin-nx": "15.4.0",
     "@nrwl/jest": "15.4.0",
     "@nrwl/js": "15.4.0",
@@ -30,6 +30,7 @@
     "husky": "^8.0.3",
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
+    "lerna": "^6.4.1",
     "nx": "15.4.0",
     "prettier": "^2.6.2",
     "ts-jest": "28.0.5",

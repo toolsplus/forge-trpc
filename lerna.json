@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "useWorkspaces": false,
+  "packages": ["packages/*"],
+  "useNx": true,
+  "version": "0.0.0",
+  "command": {
+    "version": {
+      "allowBranch": "main",
+      "conventionalCommits": true,
+      "changelogPreset": "angular",
+      "message": "chore(release): publish %s"
+    }
+  }
+}

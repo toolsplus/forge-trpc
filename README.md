@@ -1,5 +1,8 @@
 # Forge tRPC
 
+[![Release](https://github.com/toolsplus/forge-trpc/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/toolsplus/forge-trpc/actions/workflows/release.yml)
+[![npm version](https://img.shields.io/npm/v/@toolsplus/forge-trpc-adapter?style=flat&logo=npm)](https://www.npmjs.com/package/@toolsplus/forge-trpc-adapter)
+
 Forge tRPC provides a custom [tRCP adapter](https://trpc.io/docs/adapters) and a custom [tRPC link](https://trpc.io/docs/links) to enable [tRPC](https://trpc.io/) on [Atlassian Forge](https://developer.atlassian.com/platform/forge/) apps. 
 
 

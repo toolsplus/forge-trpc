@@ -14,12 +14,13 @@ jobs:
         name: Checkout [${{ github.ref_name }}]
         with:
           fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
       - run: npm ci
       - run: npx nx affected --target=build --parallel=2
-      - run: npx nx affected --target=test --parallel=2
+      - run: npx nx affected --target=test --parallel=2 --ci
   pr:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
@@ -29,11 +30,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
       - run: npm ci
       - run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-      - run: npx nx affected --target=build --parallel=3
-      - run: npx nx affected --target=test --parallel=2
+      - run: npx nx affected --target=build --parallel=2
+      - run: npx nx affected --target=test --parallel=2 --ci --code-coverage
       - run: npx nx affected --target=lint --parallel=2

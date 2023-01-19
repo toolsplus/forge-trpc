@@ -11,6 +11,7 @@
     "directory": "packages/forge-trpc-protocol"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "../../dist/packages/forge-trpc-protocol"
   }
 }

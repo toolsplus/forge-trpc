@@ -8,6 +8,8 @@ Custom [tRPC link](https://trpc.io/docs/links) to enable tRPC for [Atlassian For
 npm install @toolsplus/forge-trpc-link
 ```
 
+Note that this package has a peer dependency on `@forge/bridge`. If you have not installed `@forge/bridge` you may install before installing this package.
+
 ## Usage
 
 You can import and add the `customUiBridgeLink` to the links array as follows:

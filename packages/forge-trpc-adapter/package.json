@@ -11,7 +11,8 @@
     "directory": "packages/forge-trpc-adapter"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "../../dist/packages/forge-trpc-adapter"
   },
   "peerDependencies": {
     "@forge/resolver": "^1.4.8"

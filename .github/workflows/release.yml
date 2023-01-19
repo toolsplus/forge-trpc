@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - 'test-*'
 jobs:
   release:
     name: Release
@@ -13,6 +12,7 @@ jobs:
         name: Checkout [main]
         with:
           fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
       - uses: actions/setup-node@v3
         name: Setup Node.js
         with:
@@ -22,12 +22,14 @@ jobs:
       - name: Build and test
         run: |
           rm -rf dist
-          npm run build
-          npm run test --ci --maxWorkers=2
+          npx nx affected --target=build --parallel=2
+          npx nx affected --target=test --parallel=2 --ci
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm run prepare-release
-          npx semantic-release
+          git config user.name "Release Bot"
+          git config user.email "<>"
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+          npx lerna publish --yes --create-release github

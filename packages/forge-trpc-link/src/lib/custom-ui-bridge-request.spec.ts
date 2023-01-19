@@ -1,5 +1,5 @@
 import { TRPCClientRuntime } from '@trpc/client';
-import { defaultResolverFunctionKey } from '@forge-trpc/forge-trpc-protocol';
+import { defaultResolverFunctionKey } from '@toolsplus/forge-trpc-protocol';
 
 const invokeMock = jest.fn();
 jest.mock('@forge/bridge', () => ({
