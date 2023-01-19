@@ -1,0 +1,19 @@
+{
+  "name": "@toolsplus/forge-trpc-adapter",
+  "version": "0.0.1",
+  "description": "Custom tRCP adapter to enable tRPC for Atlassian Forge apps",
+  "author": "Tobias Binna <tobias.binna@toolsplus.io>",
+  "license": "MIT",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toolsplus/forge-trpc.git",
+    "directory": "packages/forge-trpc-adapter"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@forge/resolver": "^1.4.8"
+  }
+}

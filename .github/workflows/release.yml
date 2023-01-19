@@ -1,0 +1,33 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+      - 'test-*'
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout [main]
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        name: Setup Node.js
+        with:
+          node-version: 'lts/*'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build and test
+        run: |
+          rm -rf dist
+          npm run build
+          npm run test --ci --maxWorkers=2
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm run prepare-release
+          npx semantic-release
