@@ -13,8 +13,5 @@
   "publishConfig": {
     "access": "public",
     "directory": "../../dist/packages/forge-trpc-link"
-  },
-  "peerDependencies": {
-    "@forge/bridge": "^2.5.0"
   }
 }
