@@ -1,6 +1,6 @@
 {
   "name": "@toolsplus/forge-trpc-link",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Custom tRPC link to enable tRPC for Atlassian Forge apps",
   "author": "Tobias Binna <tobias.binna@toolsplus.io>",
   "license": "MIT",
