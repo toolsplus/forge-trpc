@@ -7,12 +7,12 @@
   "dependencies": {
     "fp-ts": "^2.13.1",
     "io-ts": "^2.2.20",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@forge/bridge": "^2.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-angular": "^17.4.2",
-    "@forge/bridge": "^2.5.0",
     "@forge/resolver": "^1.4.8",
     "@nrwl/eslint-plugin-nx": "15.4.0",
     "@nrwl/jest": "15.4.0",

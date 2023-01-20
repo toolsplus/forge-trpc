@@ -28,7 +28,7 @@ describe('resolveProcedureCall', () => {
   });
 
   const router = tRPC.router({
-    hello: tRPC.procedure.query(({}) => {
+    hello: tRPC.procedure.query(() => {
       return 'world';
     }),
   });
@@ -215,7 +215,7 @@ describe('resolveProcedureCall', () => {
 
     it('should handle throwing procedure implementation', async () => {
       const throwingProcedureRouter = tRPC.router({
-        hello: tRPC.procedure.query(({}) => {
+        hello: tRPC.procedure.query(() => {
           throw new Error('this should be caught');
         }),
       });
