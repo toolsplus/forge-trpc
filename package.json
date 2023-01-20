@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "prepare": "npx nx affected:build --parallel=2"
+    "prepublishOnly": "npx nx affected:build --parallel=2"
   },
   "private": true,
   "dependencies": {
