@@ -2,7 +2,9 @@
   "name": "forge-trpc",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "npx nx affected:build --parallel=2"
+  },
   "private": true,
   "dependencies": {
     "fp-ts": "^2.13.1",
