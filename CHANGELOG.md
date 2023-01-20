@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/toolsplus/forge-trpc/compare/v0.1.1...v0.1.2) (2023-01-20)
+
+### Bug Fixes
+
+- sync created version with published version ([fa3f229](https://github.com/toolsplus/forge-trpc/commit/fa3f2297910c2a81d4a21a86f1d8598a828357e9))
+- sync created version with published version ([ccfb9df](https://github.com/toolsplus/forge-trpc/commit/ccfb9df9f7a00b6bc601ef2a95dafdbdc33daf84))
+
 ## [0.1.1](https://github.com/toolsplus/forge-trpc/compare/v0.1.0...v0.1.1) (2023-01-20)
 
 ### Bug Fixes
