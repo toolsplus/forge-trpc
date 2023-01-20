@@ -22,8 +22,8 @@ jobs:
       - name: Build and test
         run: |
           rm -rf dist
-          npx nx affected --target=build --parallel=2
-          npx nx affected --target=test --parallel=2 --ci
+          npx nx run-many --target=build --all --parallel=2
+          npx nx run-many --target=test --ci --all --parallel=2
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

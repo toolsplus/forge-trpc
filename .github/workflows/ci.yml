@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - run: npx nx affected --target=build --parallel=2
-      - run: npx nx affected --target=test --parallel=2 --ci
+      - run: npx nx run-many --target=build --all --parallel=2
+      - run: npx nx run-many --target=test --ci --all --parallel=2
   pr:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
@@ -36,6 +36,6 @@ jobs:
           node-version: '16'
       - run: npm ci
       - run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
-      - run: npx nx affected --target=build --parallel=2
-      - run: npx nx affected --target=test --parallel=2 --ci --code-coverage
-      - run: npx nx affected --target=lint --parallel=2
+      - run: npx nx run-many --target=build --all --parallel=2
+      - run: npx nx run-many --target=test --ci --code-coverage --all --parallel=2
+      - run: npx nx run-many --target=lint --all --parallel=2
