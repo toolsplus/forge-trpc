@@ -29,11 +29,13 @@ For details on how to use tRPC in general and how to configure adapters and link
 Atlassian Forge provides a simple Javascript API ([bridge](https://developer.atlassian.com/platform/forge/custom-ui/#bridge)) that enables Custom UI apps to make secure requests to Forge app functions. To make a request from a Custom UI to a Forge function a developer needs to provide the function key as a string argument plus any function arguments that the Forge function expects. The problem with this approach is that it is up to developers to make sure they establish and follow a consistent contract (API) between their Custom UI and Forge function handler. Here are some questions that have to be answered when establishing the API contract:
 * Do you use a different function for each "API endpoint" or the same function for all endpoints but distinguish them via the payload?
 * What should the API payload look like?
-* How do you make sure you are sending the right payload to the function, i.e. ensure type safety, or make sure the client and server are speaking the same language.
+* How do you make sure you are sending the right payload to the function, i.e. ensure type safety, or make sure the client and server are speaking the same language?
 
 **The case for GraphQL**
 
 GraphQL is one answer to the questions above. It does a great job at helping developers establish a consistent API contract between the client and server and has strong community support with lots of tooling available for code generation. But in here also lies the motivation for Forge tRPC: GraphQL is using its own language-agnostic type system which typically requires tooling to generate types and/or code.
+
+**The case for tRPC**
 
 With tRPC we get the same benefits as with GraphQL and more (minus the code generation part):
 
