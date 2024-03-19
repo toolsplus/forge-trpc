@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout [${{ github.ref_name }}]
         with:
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
-      - uses: actions/setup-node@v3
+      - uses: nrwl/nx-set-shas@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 'lts/*'
       - run: npm ci
       - run: npx nx run-many --target=build --all --parallel=2
       - run: npx nx run-many --target=test --ci --all --parallel=2
@@ -25,15 +25,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
-      - uses: actions/setup-node@v3
+      - uses: nrwl/nx-set-shas@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 'lts/*'
       - run: npm ci
       - run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
       - run: npx nx run-many --target=build --all --parallel=2

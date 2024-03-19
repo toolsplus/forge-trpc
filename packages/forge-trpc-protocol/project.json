@@ -5,29 +5,24 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/forge-trpc-protocol",
         "main": "packages/forge-trpc-protocol/src/index.ts",
         "tsConfig": "packages/forge-trpc-protocol/tsconfig.lib.json",
-        "assets": ["packages/forge-trpc-protocol/*.md"],
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "assets": ["packages/forge-trpc-protocol/*.md"]
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/forge-trpc-protocol/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "packages/forge-trpc-protocol/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/forge-trpc-protocol/jest.config.ts"
       }
     }
   },
