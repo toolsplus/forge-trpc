@@ -15,13 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@toolsplus/forge-trpc-protocol": [
-        "packages/forge-trpc-protocol/src/index.ts"
-      ],
       "@toolsplus/forge-trpc-adapter": [
         "packages/forge-trpc-adapter/src/index.ts"
       ],
-      "@toolsplus/forge-trpc-link": ["packages/forge-trpc-link/src/index.ts"]
+      "@toolsplus/forge-trpc-link": ["packages/forge-trpc-link/src/index.ts"],
+      "@toolsplus/forge-trpc-protocol": [
+        "packages/forge-trpc-protocol/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
