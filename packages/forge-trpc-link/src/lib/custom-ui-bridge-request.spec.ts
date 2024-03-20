@@ -12,6 +12,16 @@ const mockRuntime: TRPCClientRuntime = {
     serialize: (v) => v,
     deserialize: (v) => v,
   },
+  combinedTransformer: {
+    input: {
+      serialize: (v) => v,
+      deserialize: (v) => v,
+    },
+    output: {
+      serialize: (v) => v,
+      deserialize: (v) => v,
+    }
+  }
 };
 
 const baseOptions = {
@@ -89,6 +99,7 @@ describe('customUiBridgeRequest', () => {
             serialize: (v) => JSON.stringify(v),
             deserialize: (v) => v,
           },
+          combinedTransformer: mockRuntime.combinedTransformer
         },
       });
       expect(invokeMock).toBeCalledWith(
@@ -139,6 +150,7 @@ describe('customUiBridgeRequest', () => {
             serialize: (v) => JSON.stringify(v),
             deserialize: (v) => v,
           },
+          combinedTransformer: mockRuntime.combinedTransformer
         },
       });
       expect(invokeMock).toBeCalledWith(
