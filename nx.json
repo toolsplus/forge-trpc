@@ -55,5 +55,17 @@
     "appsDir": "packages",
     "libsDir": "packages"
   },
+  "release": {
+    "projects": ["packages/*"],
+    "version": {
+      "conventionalCommits": true
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "file": false,
+        "createRelease": "github"
+      }
+    }
+  },
   "useInferencePlugins": false
 }
