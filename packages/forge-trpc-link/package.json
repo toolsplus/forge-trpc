@@ -5,13 +5,18 @@
   "author": "Tobias Binna <tobias.binna@toolsplus.io>",
   "license": "MIT",
   "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/toolsplus/forge-trpc.git",
     "directory": "packages/forge-trpc-link"
   },
-  "publishConfig": {
-    "access": "public",
-    "directory": "../../dist/packages/forge-trpc-link"
+  "dependencies": {
+    "@forge/bridge": "^2.5.0",
+    "@trpc/client": "^10.7.0",
+    "@trpc/server": "^10.7.0",
+    "tslib": "^2.3.0",
+    "@toolsplus/forge-trpc-protocol": "file:../forge-trpc-protocol"
   }
 }

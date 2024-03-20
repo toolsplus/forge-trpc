@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/forge-trpc-adapter",
         "main": "packages/forge-trpc-adapter/src/index.ts",
         "tsConfig": "packages/forge-trpc-adapter/tsconfig.lib.json",
-        "assets": ["packages/forge-trpc-adapter/*.md"]
+        "assets": ["packages/forge-trpc-adapter/*.md"],
+        "external": "none"
       }
     },
     "lint": {
