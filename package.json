@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "prepare": "husky install",
     "prepublishOnly": "npx nx run-many --target=build --all --parallel=2",
-    "prepare": "husky install"
+    "publish:local": "npx nx release --skip-publish"
   },
   "private": true,
   "dependencies": {
@@ -14,8 +15,8 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-angular": "^17.4.2",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@forge/resolver": "^1.4.8",
     "@nx/eslint": "18.1.2",
     "@nx/eslint-plugin": "18.1.2",
@@ -33,7 +34,6 @@
     "husky": "^8.0.3",
     "jest": "29.4.3",
     "jest-environment-jsdom": "29.4.3",
-    "lerna": "^8.1.2",
     "nx": "18.1.2",
     "prettier": "^2.6.2",
     "ts-jest": "29.1.2",

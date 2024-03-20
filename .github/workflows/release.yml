@@ -7,6 +7,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         name: Checkout [main]
@@ -17,8 +20,11 @@ jobs:
         name: Setup Node.js
         with:
           node-version: 'lts/*'
+          registry-url: https://registry.npmjs.org/
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
       - name: Build and test
         run: |
           rm -rf dist
@@ -27,9 +33,10 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         run: |
           git config user.name "Release Bot"
           git config user.email "<>"
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-          npx lerna publish --yes --create-release github
+          npx nx release
+          git push --tags
