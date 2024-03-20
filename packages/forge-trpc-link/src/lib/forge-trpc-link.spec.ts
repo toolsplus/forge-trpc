@@ -12,6 +12,16 @@ const mockRuntime: TRPCClientRuntime = {
     serialize: (v) => v,
     deserialize: (v) => v,
   },
+  combinedTransformer: {
+    input: {
+      serialize: (v) => v,
+      deserialize: (v) => v,
+    },
+    output: {
+      serialize: (v) => v,
+      deserialize: (v) => v,
+    }
+  }
 };
 
 const tRPCSuccessResponse = <T>({ id, data }: { id: number; data: T }) => ({
@@ -85,6 +95,7 @@ describe('customUiBridgeLink', () => {
           serialize: (v) => v,
           deserialize: (v) => ({ x: v }),
         },
+        combinedTransformer: mockRuntime.combinedTransformer
       })({
         op: {
           id: 123,
@@ -171,6 +182,7 @@ describe('customUiBridgeLink', () => {
             message: customDeserializerMessage,
           }),
         },
+        combinedTransformer: mockRuntime.combinedTransformer
       })({
         op: {
           id: 123,

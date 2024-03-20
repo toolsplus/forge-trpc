@@ -13,7 +13,7 @@
     "directory": "packages/forge-trpc-link"
   },
   "dependencies": {
-    "@forge/bridge": "^2.5.0",
+    "@forge/bridge": "^3.3.0",
     "@trpc/client": "^10.7.0",
     "@trpc/server": "^10.7.0",
     "tslib": "^2.3.0",
