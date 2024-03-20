@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/forge-trpc-link",
         "main": "packages/forge-trpc-link/src/index.ts",
         "tsConfig": "packages/forge-trpc-link/tsconfig.lib.json",
-        "assets": ["packages/forge-trpc-link/*.md"]
+        "assets": ["packages/forge-trpc-link/*.md"],
+        "external": "none"
       }
     },
     "lint": {
