@@ -1,6 +1,6 @@
 {
   "name": "@toolsplus/forge-trpc-protocol",
-  "version": "0.1.2",
+  "version": "0.0.1",
   "description": "Common protocol definitions used by both the Forge tRPC client and server implementation",
   "author": "Tobias Binna <tobias.binna@toolsplus.io>",
   "license": "MIT",

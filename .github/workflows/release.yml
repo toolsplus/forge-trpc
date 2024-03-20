@@ -37,4 +37,3 @@ jobs:
           git config user.name "Release Bot"
           git config user.email "<>"
           npx nx release
-          git push --tags
