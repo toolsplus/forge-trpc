@@ -11,8 +11,8 @@
   "dependencies": {
     "@forge/bridge": "^3.3.0",
     "@forge/resolver": "^1.5.29",
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
+    "@trpc/client": "^11.0.0-rc.487",
+    "@trpc/server": "^11.0.0-rc.487",
     "fp-ts": "^2.13.1",
     "io-ts": "^2.2.20",
     "tslib": "^2.3.0"

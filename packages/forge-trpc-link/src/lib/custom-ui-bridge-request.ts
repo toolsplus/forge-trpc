@@ -7,6 +7,11 @@ import {
   ProcedureCallOptions,
 } from '@toolsplus/forge-trpc-protocol';
 
+interface DataTransformer {
+  serialize: (object: any) => any;
+  deserialize: (object: any) => any;
+}
+
 // https://github.com/trpc/trpc/pull/669
 function arrayToDict(array: unknown[]) {
   const dict: Record<number, unknown> = {};
@@ -18,13 +23,15 @@ function arrayToDict(array: unknown[]) {
 
 type GetInputOptions = {
   runtime: TRPCClientRuntime;
-} & ({ inputs: unknown[] } | { input: unknown });
+} & ({ inputs: unknown[] } | { input: unknown }) & {
+  transformer: DataTransformer;
+};
 
 function getInput(opts: GetInputOptions) {
   return 'input' in opts
-    ? opts.runtime.transformer.serialize(opts.input)
+    ? opts.transformer.serialize(opts.input)
     : arrayToDict(
-        opts.inputs.map((_input) => opts.runtime.transformer.serialize(_input))
+        opts.inputs.map((_input) => opts.transformer.serialize(_input))
       );
 }
 
@@ -33,6 +40,8 @@ type CustomUiBridgeRequestOptions = GetInputOptions & {
   path: string;
 } & {
   resolverFunctionKey?: string;
+} & {
+  transformer: DataTransformer;
 };
 
 export const customUiBridgeRequest = <TResponseShape = TRPCResponse>(
