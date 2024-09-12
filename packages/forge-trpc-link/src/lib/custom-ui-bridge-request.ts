@@ -1,11 +1,10 @@
-import { TRPCClientRuntime } from '@trpc/client';
-import type { ProcedureType } from '@trpc/server';
-import type { TRPCResponse } from '@trpc/server/dist/rpc';
 import { invoke } from '@forge/bridge';
 import {
   defaultResolverFunctionKey,
   ProcedureCallOptions,
 } from '@toolsplus/forge-trpc-protocol';
+import type { CombinedDataTransformer, ProcedureType } from '@trpc/server';
+import type { TRPCResponse } from '@trpc/server/dist/rpc';
 
 // https://github.com/trpc/trpc/pull/669
 function arrayToDict(array: unknown[]) {
@@ -17,14 +16,14 @@ function arrayToDict(array: unknown[]) {
 }
 
 type GetInputOptions = {
-  runtime: TRPCClientRuntime;
-} & ({ inputs: unknown[] } | { input: unknown });
+  transformer: CombinedDataTransformer;
+} & ({ input: unknown } | { inputs: unknown[] });
 
-function getInput(opts: GetInputOptions) {
+export function getInput(opts: GetInputOptions) {
   return 'input' in opts
-    ? opts.runtime.transformer.serialize(opts.input)
+    ? opts.transformer.input.serialize(opts.input)
     : arrayToDict(
-        opts.inputs.map((_input) => opts.runtime.transformer.serialize(_input))
+        opts.inputs.map((_input) => opts.transformer.input.serialize(_input)),
       );
 }
 
@@ -33,6 +32,7 @@ type CustomUiBridgeRequestOptions = GetInputOptions & {
   path: string;
 } & {
   resolverFunctionKey?: string;
+  transformer: CombinedDataTransformer 
 };
 
 export const customUiBridgeRequest = <TResponseShape = TRPCResponse>(

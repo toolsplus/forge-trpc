@@ -4,7 +4,6 @@ import { TRPCError } from '@trpc/server';
 //
 // This copy exists because the method is not exported from the server package.
 // @see https://github.com/trpc/trpc/blob/b85bbbe825b66d5ac20506c1f0bcedec0f76841b/packages/server/src/error/utils.ts
-
 export function getMessageFromUnknownError(
   err: unknown,
   fallback: string

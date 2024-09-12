@@ -1,8 +1,10 @@
-import type { AnyRouter } from '@trpc/server';
 import { TRPCClientError, TRPCLink } from '@trpc/client';
+import type { CoercedTransformerParameters, TransformerOptions } from '@trpc/client/dist/unstable-internals';
+import type { DataTransformerOptions } from '@trpc/server/dist/unstable-core-do-not-import';
+import type { AnyTRPCRouter, TRPCCombinedDataTransformer } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
-import { transformResult } from './transform-result';
 import { customUiBridgeRequest } from './custom-ui-bridge-request';
+import { transformResult } from './transform-result';
 
 export interface CustomUiBridgeLinkOptions {
   /**
@@ -12,6 +14,7 @@ export interface CustomUiBridgeLinkOptions {
    * @defaultValue 'rpc'
    */
   resolverFunctionKey?: string;
+  transformer?: DataTransformerOptions;
 }
 
 /**
@@ -27,24 +30,25 @@ export interface CustomUiBridgeLinkOptions {
  * @returns Terminating tRPC link
  *
  */
-export const customUiBridgeLink = <TRouter extends AnyRouter>(
+export const customUiBridgeLink = <TRouter extends AnyTRPCRouter>(
   opts: CustomUiBridgeLinkOptions
 ): TRPCLink<TRouter> => {
-  return (runtime) =>
+  return () =>
     ({ op }) =>
       observable((observer) => {
         const { path, input, type } = op;
+        const transformer = getTransformer(opts.transformer);
         const promise = customUiBridgeRequest({
-          runtime,
           type,
           input,
           path,
           resolverFunctionKey: opts.resolverFunctionKey,
+          transformer,
         });
 
         promise
           .then((res) => {
-            const transformed = transformResult(res, runtime);
+            const transformed = transformResult(res, transformer.output);
             if (!transformed.ok) {
               observer.error(TRPCClientError.from(transformed.error));
               return;
@@ -57,3 +61,32 @@ export const customUiBridgeLink = <TRouter extends AnyRouter>(
           .catch((cause) => observer.error(TRPCClientError.from(cause)));
       });
 };
+
+function getTransformer(
+  transformer:
+    | TransformerOptions<{ transformer: false }>['transformer']
+    | TransformerOptions<{ transformer: true }>['transformer']
+    | undefined,
+): TRPCCombinedDataTransformer {
+  const _transformer =
+    transformer as CoercedTransformerParameters['transformer'];
+  if (!_transformer) {
+    return {
+      input: {
+        serialize: (data) => data,
+        deserialize: (data) => data,
+      },
+      output: {
+        serialize: (data) => data,
+        deserialize: (data) => data,
+      },
+    };
+  }
+  if ('input' in _transformer) {
+    return _transformer;
+  }
+  return {
+    input: _transformer,
+    output: _transformer,
+  };
+}

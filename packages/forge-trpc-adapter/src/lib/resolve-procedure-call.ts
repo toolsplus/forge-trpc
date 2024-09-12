@@ -1,29 +1,29 @@
-import * as A from 'fp-ts/Array';
-import * as R from 'fp-ts/Record';
-import * as T from 'fp-ts/Task';
-import * as E from 'fp-ts/Either';
-import * as TE from 'fp-ts/TaskEither';
-import { pipe } from 'fp-ts/function';
-import * as PathReporter from 'io-ts/PathReporter';
-import {
-  AnyRouter,
-  callProcedure,
-  inferRouterContext,
-  inferRouterError,
-  TRPCError,
-} from '@trpc/server';
-import { TRPCResponse } from '@trpc/server/rpc';
 import {
   ProcedureCallOptions,
   procedureCallOptionsCodec,
   ProcedureType,
 } from '@toolsplus/forge-trpc-protocol';
-import { getTRPCErrorFromUnknown } from './error-util';
-import { transformTRPCResponse } from './transform-trpc-response';
-import { Payload } from './forge-resolver.model';
+import {
+  AnyTRPCRouter,
+  callTRPCProcedure,
+  getErrorShape,
+  inferRouterContext,
+  inferRouterError,
+  TRPCError
+} from '@trpc/server';
+import { TRPCResponse } from '@trpc/server/rpc';
+import * as A from 'fp-ts/Array';
+import * as E from 'fp-ts/Either';
+import * as R from 'fp-ts/Record';
+import * as T from 'fp-ts/Task';
+import * as TE from 'fp-ts/TaskEither';
+import { pipe } from 'fp-ts/function';
+import * as PathReporter from 'io-ts/PathReporter';
 import { batchInputCodec } from './batch-call.model';
-
-type OnErrorFunction<TRouter extends AnyRouter> = (opts: {
+import { getTRPCErrorFromUnknown } from './error-util';
+import { Payload } from './forge-resolver.model';
+import { transformTRPCResponse } from './transform-trpc-response';
+type OnErrorFunction<TRouter extends AnyTRPCRouter> = (opts: {
   error: TRPCError;
   type: ProcedureType | 'unknown';
   path: string | undefined;
@@ -75,7 +75,7 @@ const validateProcedureCallOptions = (
   return E.right(callOptions);
 };
 
-const getInputs = <TRouter extends AnyRouter>({
+const getInputs = <TRouter extends AnyTRPCRouter>({
   callOptions,
   router,
 }: {
@@ -135,14 +135,14 @@ const getInputs = <TRouter extends AnyRouter>({
       R.isEmpty(left)
         ? E.right(right)
         : E.left({
-            error: new Error(
-              `Batch input deserialization failed on the following inputs:\n
+          error: new Error(
+            `Batch input deserialization failed on the following inputs:\n
                     ${Object.entries(left)
-                      .map(([key, e]) => `[${key}]: ${e.error}`)
-                      .join('\n')}`
-            ),
-            callOptions,
-          })
+              .map(([key, e]) => `[${key}]: ${e.error}`)
+              .join('\n')}`
+          ),
+          callOptions,
+        })
   );
 };
 
@@ -150,7 +150,7 @@ type ProcedureCallResult =
   | { type: 'error'; input: unknown; path: string; error: TRPCError }
   | { type: 'data'; input: unknown; path: string; data: unknown };
 
-const callProcedures = <TRouter extends AnyRouter>({
+const callProcedures = <TRouter extends AnyTRPCRouter>({
   callOptions,
   inputs,
   router,
@@ -174,10 +174,10 @@ const callProcedures = <TRouter extends AnyRouter>({
       pipe(
         TE.tryCatch(
           () =>
-            callProcedure({
+            callTRPCProcedure({
               procedures: router._def.procedures,
               path,
-              rawInput: input,
+              getRawInput: async () => input,
               ctx,
               type: callOptions.type,
             }),
@@ -213,7 +213,7 @@ const callProcedures = <TRouter extends AnyRouter>({
   );
 };
 
-const toTRPCResponse = <TRouter extends AnyRouter>({
+const toTRPCResponse = <TRouter extends AnyTRPCRouter>({
   callResult,
   router,
   callOptions,
@@ -227,7 +227,8 @@ const toTRPCResponse = <TRouter extends AnyRouter>({
   const { path, input } = callResult;
   if (callResult.type === 'error') {
     return {
-      error: router.getErrorShape({
+      error: getErrorShape({
+        config: router._def._config,
         error: callResult.error,
         type: callOptions.type,
         path,
@@ -244,7 +245,7 @@ const toTRPCResponse = <TRouter extends AnyRouter>({
   }
 };
 
-const transformResponse = <TRouter extends AnyRouter>(
+const transformResponse = <TRouter extends AnyTRPCRouter>(
   router: TRouter,
   result: TRPCResponse | TRPCResponse[]
 ): TRPCResponse | TRPCResponse[] =>
@@ -254,7 +255,7 @@ const transformResponse = <TRouter extends AnyRouter>(
 /**
  * Base interface for any response handler
  */
-interface BaseHandlerOptions<TRouter extends AnyRouter> {
+interface BaseHandlerOptions<TRouter extends AnyTRPCRouter> {
   onError?: OnErrorFunction<TRouter>;
   batching?: {
     enabled: boolean;
@@ -262,13 +263,13 @@ interface BaseHandlerOptions<TRouter extends AnyRouter> {
   router: TRouter;
 }
 
-interface ResolveProcedureCallOptions<TRouter extends AnyRouter>
+interface ResolveProcedureCallOptions<TRouter extends AnyTRPCRouter>
   extends BaseHandlerOptions<TRouter> {
   createContext: () => Promise<inferRouterContext<TRouter>>;
   unverifiedCallOptions: Payload;
 }
 
-export const resolveProcedureCall = async <TRouter extends AnyRouter>(
+export const resolveProcedureCall = async <TRouter extends AnyTRPCRouter>(
   opts: ResolveProcedureCallOptions<TRouter>
 ): Promise<TRPCResponse | TRPCResponse[]> => {
   const { createContext, onError, router, unverifiedCallOptions } = opts;
@@ -318,6 +319,7 @@ export const resolveProcedureCall = async <TRouter extends AnyRouter>(
         // - input deserialization fails
         const error = getTRPCErrorFromUnknown(cause.error);
         const errorMeta = {
+          config: router._def._config,
           error,
           type: cause.callOptions?.type ?? ('unknown' as const),
           path: cause.callOptions?.path ?? undefined,
@@ -326,7 +328,7 @@ export const resolveProcedureCall = async <TRouter extends AnyRouter>(
         };
         onError?.(errorMeta);
         return transformResponse(router, {
-          error: router.getErrorShape(errorMeta),
+          error: getErrorShape(errorMeta),
         });
       },
       ({ resultEnvelopes, callOptions }) =>
