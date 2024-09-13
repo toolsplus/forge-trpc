@@ -59,6 +59,10 @@
         "packageRoot": "dist/packages/{projectName}"
       }
     },
+    "git": {
+      "commit": false,
+      "stageChanges": false
+    },
     "changelog": {
       "workspaceChangelog": {
         "file": false,
