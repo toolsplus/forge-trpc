@@ -179,7 +179,8 @@ const callProcedures = <TRouter extends AnyRouter>({
               path,
               getRawInput: async () => input,
               ctx,
-              type: callOptions.type
+              type: callOptions.type,
+              signal: undefined
             }),
           (cause) => {
             const error = getTRPCErrorFromUnknown(cause);

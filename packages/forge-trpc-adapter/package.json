@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@forge/resolver": "^1.4.8",
-    "@trpc/server": "^10.7.0",
+    "@toolsplus/forge-trpc-protocol": "0.0.0-development",
+    "@trpc/server": "^11.0.0-rc.553",
     "fp-ts": "^2.13.1",
     "io-ts": "^2.2.20",
-    "tslib": "^2.3.0",
-    "@toolsplus/forge-trpc-protocol": "0.0.0-development"
+    "tslib": "^2.3.0"
   }
 }
