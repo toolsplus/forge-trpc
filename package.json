@@ -11,8 +11,8 @@
   "dependencies": {
     "@forge/bridge": "^3.3.0",
     "@forge/resolver": "^1.5.29",
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
+    "@trpc/client": "^11.0.0-rc.593",
+    "@trpc/server": "^11.0.0-rc.593",
     "fp-ts": "^2.13.1",
     "io-ts": "^2.2.20",
     "tslib": "^2.3.0"
@@ -47,5 +47,6 @@
   },
   "nx": {
     "includedScripts": []
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

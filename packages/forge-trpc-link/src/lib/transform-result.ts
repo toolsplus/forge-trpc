@@ -1,19 +1,20 @@
 import { AnyRouter, inferRouterError } from '@trpc/server';
-import {
-  TRPCResponse,
-  TRPCResponseMessage,
-  TRPCResultMessage,
-} from '@trpc/server/rpc';
-import { TRPCClientError, TRPCClientRuntime } from '@trpc/client';
+import { TRPCResponse, TRPCResponseMessage, TRPCResultMessage } from '@trpc/server/rpc';
+import { TRPCClientError } from '@trpc/client';
+
+interface DataTransformer {
+  serialize: (object: any) => any;
+  deserialize: (object: any) => any;
+}
 
 function transformResultInner<TRouter extends AnyRouter, TOutput>(
   response:
     | TRPCResponseMessage<TOutput, inferRouterError<TRouter>>
     | TRPCResponse<TOutput, inferRouterError<TRouter>>,
-  runtime: TRPCClientRuntime
+  transformer: DataTransformer
 ) {
   if ('error' in response) {
-    const error = runtime.transformer.deserialize(
+    const error = transformer.deserialize(
       response.error
     ) as inferRouterError<TRouter>;
     return {
@@ -29,7 +30,7 @@ function transformResultInner<TRouter extends AnyRouter, TOutput>(
     ...response.result,
     ...((!response.result.type || response.result.type === 'data') && {
       type: 'data',
-      data: runtime.transformer.deserialize(response.result.data),
+      data: transformer.deserialize(response.result.data),
     }),
   } as TRPCResultMessage<TOutput>['result'];
   return { ok: true, result } as const;
@@ -55,12 +56,12 @@ export function transformResult<TRouter extends AnyRouter, TOutput>(
   response:
     | TRPCResponseMessage<TOutput, inferRouterError<TRouter>>
     | TRPCResponse<TOutput, inferRouterError<TRouter>>,
-  runtime: TRPCClientRuntime
+  transformer: DataTransformer
 ): ReturnType<typeof transformResultInner> {
   let result: ReturnType<typeof transformResultInner>;
   try {
     // Use the data transformers on the JSON-response
-    result = transformResultInner(response, runtime);
+    result = transformResultInner(response, transformer);
   } catch (err) {
     throw new TRPCClientError('Unable to transform response from server');
   }

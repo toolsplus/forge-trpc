@@ -7,16 +7,16 @@ import { pipe } from 'fp-ts/function';
 import * as PathReporter from 'io-ts/PathReporter';
 import {
   AnyRouter,
-  callProcedure,
+  callProcedure, getErrorShape,
   inferRouterContext,
   inferRouterError,
-  TRPCError,
+  TRPCError
 } from '@trpc/server';
 import { TRPCResponse } from '@trpc/server/rpc';
 import {
   ProcedureCallOptions,
   procedureCallOptionsCodec,
-  ProcedureType,
+  ProcedureType
 } from '@toolsplus/forge-trpc-protocol';
 import { getTRPCErrorFromUnknown } from './error-util';
 import { transformTRPCResponse } from './transform-trpc-response';
@@ -47,8 +47,8 @@ const decodeProcedureCallOptions = (
         code: 'BAD_REQUEST',
         message: `Unexpected RPC payload: ${PathReporter.failure(
           validationError
-        ).join(', ')}`,
-      }),
+        ).join(', ')}`
+      })
     }))
   );
 };
@@ -60,25 +60,25 @@ const validateProcedureCallOptions = (
   if (callOptions.isBatchCall && !batchingEnabled) {
     return E.left({
       error: new Error(`Batching is not enabled on the server`),
-      callOptions,
+      callOptions
     });
   }
   if (callOptions.type === 'subscription') {
     return E.left({
       error: new TRPCError({
         message: 'Subscriptions should use wsLink',
-        code: 'METHOD_NOT_SUPPORTED',
+        code: 'METHOD_NOT_SUPPORTED'
       }),
-      callOptions,
+      callOptions
     });
   }
   return E.right(callOptions);
 };
 
 const getInputs = <TRouter extends AnyRouter>({
-  callOptions,
-  router,
-}: {
+                                                callOptions,
+                                                router
+                                              }: {
   callOptions: ProcedureCallOptions;
   router: TRouter;
 }): E.Either<ProcedureCallError, Record<number, unknown>> => {
@@ -90,7 +90,7 @@ const getInputs = <TRouter extends AnyRouter>({
     },
     (error): ProcedureCallError => ({
       error: error as Error,
-      callOptions,
+      callOptions
     })
   );
 
@@ -98,7 +98,7 @@ const getInputs = <TRouter extends AnyRouter>({
     return pipe(
       deserializeInputValue(callOptions.input),
       E.map((value) => ({
-        0: value,
+        0: value
       }))
     );
   }
@@ -111,9 +111,9 @@ const getInputs = <TRouter extends AnyRouter>({
     return E.left({
       error: new TRPCError({
         code: 'BAD_REQUEST',
-        message: '"input" needs to be an object when doing a batch call',
+        message: '"input" needs to be an object when doing a batch call'
       }),
-      callOptions,
+      callOptions
     });
   }
   const inputValidation = batchInputCodec.decode(callOptions.input);
@@ -122,9 +122,9 @@ const getInputs = <TRouter extends AnyRouter>({
       error: new TRPCError({
         code: 'BAD_REQUEST',
         message:
-          '"input" object keys need to be numbers when doing a batch call',
+          '"input" object keys need to be numbers when doing a batch call'
       }),
-      callOptions,
+      callOptions
     });
   }
 
@@ -135,14 +135,14 @@ const getInputs = <TRouter extends AnyRouter>({
       R.isEmpty(left)
         ? E.right(right)
         : E.left({
-            error: new Error(
-              `Batch input deserialization failed on the following inputs:\n
+          error: new Error(
+            `Batch input deserialization failed on the following inputs:\n
                     ${Object.entries(left)
-                      .map(([key, e]) => `[${key}]: ${e.error}`)
-                      .join('\n')}`
-            ),
-            callOptions,
-          })
+              .map(([key, e]) => `[${key}]: ${e.error}`)
+              .join('\n')}`
+          ),
+          callOptions
+        })
   );
 };
 
@@ -151,12 +151,12 @@ type ProcedureCallResult =
   | { type: 'data'; input: unknown; path: string; data: unknown };
 
 const callProcedures = <TRouter extends AnyRouter>({
-  callOptions,
-  inputs,
-  router,
-  ctx,
-  onError,
-}: {
+                                                     callOptions,
+                                                     inputs,
+                                                     router,
+                                                     ctx,
+                                                     onError
+                                                   }: {
   callOptions: ProcedureCallOptions;
   inputs: Record<number, unknown>;
   router: TRouter;
@@ -177,9 +177,10 @@ const callProcedures = <TRouter extends AnyRouter>({
             callProcedure({
               procedures: router._def.procedures,
               path,
-              rawInput: input,
+              getRawInput: async () => input,
               ctx,
               type: callOptions.type,
+              signal: undefined
             }),
           (cause) => {
             const error = getTRPCErrorFromUnknown(cause);
@@ -188,7 +189,7 @@ const callProcedures = <TRouter extends AnyRouter>({
               path,
               input,
               ctx,
-              type: callOptions.type,
+              type: callOptions.type
             });
             return error;
           }
@@ -198,13 +199,13 @@ const callProcedures = <TRouter extends AnyRouter>({
             type: 'error',
             input,
             path,
-            error,
+            error
           }),
           (output) => ({
             type: 'data',
             input,
             path,
-            data: output,
+            data: output
           })
         )
       )
@@ -214,11 +215,11 @@ const callProcedures = <TRouter extends AnyRouter>({
 };
 
 const toTRPCResponse = <TRouter extends AnyRouter>({
-  callResult,
-  router,
-  callOptions,
-  ctx,
-}: {
+                                                     callResult,
+                                                     router,
+                                                     callOptions,
+                                                     ctx
+                                                   }: {
   callResult: ProcedureCallResult;
   router: TRouter;
   callOptions: ProcedureCallOptions;
@@ -227,19 +228,20 @@ const toTRPCResponse = <TRouter extends AnyRouter>({
   const { path, input } = callResult;
   if (callResult.type === 'error') {
     return {
-      error: router.getErrorShape({
+      error: getErrorShape({
+        config: router._def._config,
         error: callResult.error,
         type: callOptions.type,
         path,
         input,
-        ctx,
-      }),
+        ctx
+      })
     };
   } else {
     return {
       result: {
-        data: callResult.data,
-      },
+        data: callResult.data
+      }
     };
   }
 };
@@ -322,11 +324,11 @@ export const resolveProcedureCall = async <TRouter extends AnyRouter>(
           type: cause.callOptions?.type ?? ('unknown' as const),
           path: cause.callOptions?.path ?? undefined,
           input: cause.callOptions?.input ?? undefined,
-          ctx,
+          ctx
         };
         onError?.(errorMeta);
         return transformResponse(router, {
-          error: router.getErrorShape(errorMeta),
+          error: getErrorShape({ ...errorMeta, config: router._def._config })
         });
       },
       ({ resultEnvelopes, callOptions }) =>
