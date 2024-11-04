@@ -6,9 +6,11 @@ jest.mock('@forge/bridge', () => ({
 }));
 import { customUiBridgeRequest } from './custom-ui-bridge-request';
 
-type DataTransformer =  Parameters<typeof customUiBridgeRequest>[0]["transformer"];
+type DataTransformer = Parameters<
+  typeof customUiBridgeRequest
+>[0]['transformer'];
 
-const mockTransformer: DataTransformer= {
+const mockTransformer: DataTransformer = {
   serialize: (v) => v,
   deserialize: (v) => v,
 };
@@ -90,7 +92,7 @@ describe('customUiBridgeRequest', () => {
         transformer: {
           serialize: (v) => JSON.stringify(v),
           deserialize: (v) => v,
-        }
+        },
       });
       expect(invokeMock).toBeCalledWith(
         defaultResolverFunctionKey,
@@ -140,7 +142,7 @@ describe('customUiBridgeRequest', () => {
         transformer: {
           serialize: (v) => JSON.stringify(v),
           deserialize: (v) => v,
-        }
+        },
       });
       expect(invokeMock).toBeCalledWith(
         defaultResolverFunctionKey,

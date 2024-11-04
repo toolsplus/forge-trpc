@@ -25,7 +25,7 @@ import superjson from 'superjson';
 export const trpcClient = createTRPCClient<HelloRouter>({
   links: [
     customUiBridgeLink({
-      resolverFunctionKey: 'rpc' ,
+      resolverFunctionKey: 'rpc',
       transformer: superjson,
     }),
   ],

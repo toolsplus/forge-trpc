@@ -172,7 +172,7 @@ describe('customUiBridgeLink', () => {
             message: customDeserializerMessage,
           }),
         },
-      })
+      });
       const customUiBridgeLinkObservable = customizedLink({})({
         op: {
           id: 123,
