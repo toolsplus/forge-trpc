@@ -43,3 +43,6 @@ With tRPC we get the same benefits as with GraphQL and more (minus the code gene
 * Simple: tRPC solely relies on Typescript to ensure the client-server contract is valid - no code generators, no schema declarations required.
 * Performance: tRPC has great support for server-side rendering. If the Forge ecosystem supports server-side rendering, I am sure tRPC will be able to leverage that.
 * Developer ergonomics: Through the tRCP interface, IDEs will provide code completion for available Forge functions and even support jump-to-source (server) from Custom UI code.
+
+## tRPC v11
+Starting version 1.0.0 this packages supports tRPC v11 [which is considered stable](https://trpc.io/docs/migrate-from-v10-to-v11). This package is currently tested with 11.0.0-rc.593. Be aware that you'll need to use React 18.x to use tRPC 11.x with react-query 5.x. If you spot any issues with tRPC 11.x please open an issue. 

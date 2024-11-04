@@ -1,4 +1,3 @@
-import { TRPCClientRuntime } from '@trpc/client';
 import { observableToPromise } from '@trpc/server/observable';
 
 const customUiBridgeRequestMock = jest.fn();
@@ -6,23 +5,6 @@ jest.mock('./custom-ui-bridge-request', () => ({
   customUiBridgeRequest: customUiBridgeRequestMock,
 }));
 import { customUiBridgeLink } from './forge-trcp-link';
-
-const mockRuntime: TRPCClientRuntime = {
-  transformer: {
-    serialize: (v) => v,
-    deserialize: (v) => v,
-  },
-  combinedTransformer: {
-    input: {
-      serialize: (v) => v,
-      deserialize: (v) => v,
-    },
-    output: {
-      serialize: (v) => v,
-      deserialize: (v) => v,
-    }
-  }
-};
 
 const tRPCSuccessResponse = <T>({ id, data }: { id: number; data: T }) => ({
   id,
@@ -46,7 +28,13 @@ const tRPCErrorResponse = <T>({
   error: { code, message, data },
 });
 
-const link = customUiBridgeLink({});
+const link = customUiBridgeLink({
+  resolverFunctionKey: 'rpc',
+  transformer: {
+    serialize: (v) => v,
+    deserialize: (v) => v,
+  },
+});
 
 describe('customUiBridgeLink', () => {
   afterEach(() => {
@@ -61,19 +49,19 @@ describe('customUiBridgeLink', () => {
           tRPCSuccessResponse({ id: 123, data: fakeResponseData })
         )
       );
-      const customUiBridgeLinkObservable = link(mockRuntime)({
+      const customUiBridgeLinkObservable = link({})({
         op: {
           id: 123,
           type: 'query',
           input: { one: 'abc', two: 'xyz' },
           path: 'test',
           context: {},
+          signal: undefined,
         },
         next: jest.fn(),
       });
 
-      const result = await observableToPromise(customUiBridgeLinkObservable)
-        .promise;
+      const result = await observableToPromise(customUiBridgeLinkObservable);
 
       expect(result).toEqual({
         result: {
@@ -90,25 +78,26 @@ describe('customUiBridgeLink', () => {
           tRPCSuccessResponse({ id: 123, data: fakeResponseData })
         )
       );
-      const customUiBridgeLinkObservable = link({
+      const customizedLink = customUiBridgeLink({
+        resolverFunctionKey: 'rpc',
         transformer: {
           serialize: (v) => v,
           deserialize: (v) => ({ x: v }),
         },
-        combinedTransformer: mockRuntime.combinedTransformer
-      })({
+      });
+      const customUiBridgeLinkObservable = customizedLink({})({
         op: {
           id: 123,
           type: 'query',
           input: { one: 'abc', two: 'xyz' },
           path: 'test',
           context: {},
+          signal: undefined,
         },
         next: jest.fn(),
       });
 
-      const result = await observableToPromise(customUiBridgeLinkObservable)
-        .promise;
+      const result = await observableToPromise(customUiBridgeLinkObservable);
 
       expect(result).toEqual({
         result: {
@@ -134,13 +123,14 @@ describe('customUiBridgeLink', () => {
         )
       );
 
-      const customUiBridgeLinkObservable = link(mockRuntime)({
+      const customUiBridgeLinkObservable = link({})({
         op: {
           id: 123,
           type: 'query',
           input: { one: 'abc', two: 'xyz' },
           path: 'test',
           context: {},
+          signal: undefined,
         },
         next: jest.fn(),
       });
@@ -150,7 +140,7 @@ describe('customUiBridgeLink', () => {
       expect.assertions(1);
 
       await expect(
-        observableToPromise(customUiBridgeLinkObservable).promise
+        observableToPromise(customUiBridgeLinkObservable)
       ).rejects.toMatchObject({
         name: 'TRPCClientError',
         message: fakeErrorMessage,
@@ -174,7 +164,7 @@ describe('customUiBridgeLink', () => {
       );
 
       const customDeserializerMessage = 'custom-deserializer-message';
-      const customUiBridgeLinkObservable = link({
+      const customizedLink = customUiBridgeLink({
         transformer: {
           serialize: (v) => v,
           deserialize: (v) => ({
@@ -182,14 +172,15 @@ describe('customUiBridgeLink', () => {
             message: customDeserializerMessage,
           }),
         },
-        combinedTransformer: mockRuntime.combinedTransformer
-      })({
+      });
+      const customUiBridgeLinkObservable = customizedLink({})({
         op: {
           id: 123,
           type: 'query',
           input: { one: 'abc', two: 'xyz' },
           path: 'test',
           context: {},
+          signal: undefined,
         },
         next: jest.fn(),
       });
@@ -199,7 +190,7 @@ describe('customUiBridgeLink', () => {
       expect.assertions(1);
 
       await expect(
-        observableToPromise(customUiBridgeLinkObservable).promise
+        observableToPromise(customUiBridgeLinkObservable)
       ).rejects.toMatchObject({
         name: 'TRPCClientError',
         message: customDeserializerMessage,

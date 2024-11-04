@@ -14,6 +14,11 @@ export interface CustomUiBridgeLinkOptions {
   resolverFunctionKey?: string;
 }
 
+interface DataTransformer {
+  serialize: (object: any) => any;
+  deserialize: (object: any) => any;
+}
+
 /**
  * Creates a tRPC terminating link for Forge Custom UI that sends tRPC requests over the Forge
  * Custom UI bridge to the Forge app backend.
@@ -28,7 +33,9 @@ export interface CustomUiBridgeLinkOptions {
  *
  */
 export const customUiBridgeLink = <TRouter extends AnyRouter>(
-  opts: CustomUiBridgeLinkOptions
+  opts: CustomUiBridgeLinkOptions & {
+    transformer: DataTransformer;
+  }
 ): TRPCLink<TRouter> => {
   return (runtime) =>
     ({ op }) =>
@@ -40,11 +47,11 @@ export const customUiBridgeLink = <TRouter extends AnyRouter>(
           input,
           path,
           resolverFunctionKey: opts.resolverFunctionKey,
+          transformer: opts.transformer,
         });
-
         promise
           .then((res) => {
-            const transformed = transformResult(res, runtime);
+            const transformed = transformResult(res, opts.transformer);
             if (!transformed.ok) {
               observer.error(TRPCClientError.from(transformed.error));
               return;

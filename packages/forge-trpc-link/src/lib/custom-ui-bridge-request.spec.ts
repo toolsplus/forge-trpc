@@ -1,4 +1,3 @@
-import { TRPCClientRuntime } from '@trpc/client';
 import { defaultResolverFunctionKey } from '@toolsplus/forge-trpc-protocol';
 
 const invokeMock = jest.fn();
@@ -7,21 +6,13 @@ jest.mock('@forge/bridge', () => ({
 }));
 import { customUiBridgeRequest } from './custom-ui-bridge-request';
 
-const mockRuntime: TRPCClientRuntime = {
-  transformer: {
-    serialize: (v) => v,
-    deserialize: (v) => v,
-  },
-  combinedTransformer: {
-    input: {
-      serialize: (v) => v,
-      deserialize: (v) => v,
-    },
-    output: {
-      serialize: (v) => v,
-      deserialize: (v) => v,
-    }
-  }
+type DataTransformer = Parameters<
+  typeof customUiBridgeRequest
+>[0]['transformer'];
+
+const mockTransformer: DataTransformer = {
+  serialize: (v) => v,
+  deserialize: (v) => v,
 };
 
 const baseOptions = {
@@ -38,7 +29,8 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: mockRuntime,
+        transformer: mockTransformer,
+        runtime: {},
       });
       expect(invokeMock).toBeCalledWith(
         defaultResolverFunctionKey,
@@ -56,7 +48,8 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: mockRuntime,
+        runtime: {},
+        transformer: mockTransformer,
       });
       expect(invokeMock).toBeCalledWith(
         defaultResolverFunctionKey,
@@ -75,7 +68,8 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: mockRuntime,
+        runtime: {},
+        transformer: mockTransformer,
         resolverFunctionKey: functionKey,
       });
       expect(invokeMock).toBeCalledWith(
@@ -94,12 +88,10 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: {
-          transformer: {
-            serialize: (v) => JSON.stringify(v),
-            deserialize: (v) => v,
-          },
-          combinedTransformer: mockRuntime.combinedTransformer
+        runtime: {},
+        transformer: {
+          serialize: (v) => JSON.stringify(v),
+          deserialize: (v) => v,
         },
       });
       expect(invokeMock).toBeCalledWith(
@@ -124,7 +116,8 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: mockRuntime,
+        runtime: {},
+        transformer: mockTransformer,
       });
       expect(invokeMock).toBeCalledWith(
         defaultResolverFunctionKey,
@@ -145,12 +138,10 @@ describe('customUiBridgeRequest', () => {
       } as const;
       await customUiBridgeRequest({
         ...options,
-        runtime: {
-          transformer: {
-            serialize: (v) => JSON.stringify(v),
-            deserialize: (v) => v,
-          },
-          combinedTransformer: mockRuntime.combinedTransformer
+        runtime: {},
+        transformer: {
+          serialize: (v) => JSON.stringify(v),
+          deserialize: (v) => v,
         },
       });
       expect(invokeMock).toBeCalledWith(

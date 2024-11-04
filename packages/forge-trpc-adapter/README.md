@@ -27,6 +27,7 @@ import {
   CreateForgeContextOptions
 } from '@toolsplus/forge-trcp-adapter';
 import { z } from 'zod';
+import superjson from 'superjson';
 
 // Initialize a context for the server
 const createContext = ({ request }: CreateForgeContextOptions) => {
@@ -37,9 +38,11 @@ const createContext = ({ request }: CreateForgeContextOptions) => {
 }
 
 // Get the context type
-type Context = inferAsyncReturnType<typeof createContext>;
+type Context = Awaited<ReturnType<typeof createContext>>;
 
-const tRPC = initTRPC.context<Context>().create();
+const tRPC = initTRPC.context<Context>().create({
+  transformer: superjson
+});
 
 // Create hello router
 const helloRouter = tRPC.router({

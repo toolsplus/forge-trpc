@@ -8,6 +8,7 @@ import * as PathReporter from 'io-ts/PathReporter';
 import {
   AnyRouter,
   callProcedure,
+  getErrorShape,
   inferRouterContext,
   inferRouterError,
   TRPCError,
@@ -177,9 +178,10 @@ const callProcedures = <TRouter extends AnyRouter>({
             callProcedure({
               procedures: router._def.procedures,
               path,
-              rawInput: input,
+              getRawInput: async () => input,
               ctx,
               type: callOptions.type,
+              signal: undefined,
             }),
           (cause) => {
             const error = getTRPCErrorFromUnknown(cause);
@@ -227,7 +229,8 @@ const toTRPCResponse = <TRouter extends AnyRouter>({
   const { path, input } = callResult;
   if (callResult.type === 'error') {
     return {
-      error: router.getErrorShape({
+      error: getErrorShape({
+        config: router._def._config,
         error: callResult.error,
         type: callOptions.type,
         path,
@@ -326,7 +329,7 @@ export const resolveProcedureCall = async <TRouter extends AnyRouter>(
         };
         onError?.(errorMeta);
         return transformResponse(router, {
-          error: router.getErrorShape(errorMeta),
+          error: getErrorShape({ ...errorMeta, config: router._def._config }),
         });
       },
       ({ resultEnvelopes, callOptions }) =>
