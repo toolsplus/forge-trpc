@@ -24,8 +24,8 @@ function arrayToDict(array: unknown[]) {
 type GetInputOptions = {
   runtime: TRPCClientRuntime;
 } & ({ inputs: unknown[] } | { input: unknown }) & {
-  transformer: DataTransformer;
-};
+    transformer: DataTransformer;
+  };
 
 function getInput(opts: GetInputOptions) {
   return 'input' in opts
