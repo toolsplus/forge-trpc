@@ -7,7 +7,7 @@ import { pipe } from 'fp-ts/function';
 import * as PathReporter from 'io-ts/PathReporter';
 import {
   AnyRouter,
-  callProcedure,
+  callTRPCProcedure,
   getErrorShape,
   inferRouterContext,
   inferRouterError,
@@ -175,8 +175,8 @@ const callProcedures = <TRouter extends AnyRouter>({
       pipe(
         TE.tryCatch(
           () =>
-            callProcedure({
-              procedures: router._def.procedures,
+            callTRPCProcedure({
+              router,
               path,
               getRawInput: async () => input,
               ctx,

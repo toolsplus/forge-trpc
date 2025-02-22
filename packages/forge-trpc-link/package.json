@@ -15,8 +15,8 @@
   "dependencies": {
     "@forge/bridge": "^3.3.0",
     "@toolsplus/forge-trpc-protocol": "0.0.0-development",
-    "@trpc/client": "^11.0.0-rc.593",
-    "@trpc/server": "^11.0.0-rc.593",
+    "@trpc/client": "^11.0.0-rc.795",
+    "@trpc/server": "^11.0.0-rc.795",
     "tslib": "^2.3.0"
   }
 }
