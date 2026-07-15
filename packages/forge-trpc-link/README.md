@@ -9,7 +9,11 @@ npm install @toolsplus/forge-trpc-link
 npm install superjson
 ```
 
-Note that this package has a peer dependency on `@forge/bridge`. If you have not installed `@forge/bridge` you may install before installing this package.
+Note that this package declares `@forge/bridge` (`^6.0.0`) as a peer dependency. Forge apps typically already have it installed. If your app does not, install it alongside this package:
+
+```shell
+npm install @forge/bridge
+```
 
 ## Usage
 

@@ -58,8 +58,11 @@ export const customUiBridgeRequest = <TResponseShape = TRPCResponse>(
     isBatchCall,
   };
 
+  // This call never passes invoke metadata, so the response is always the
+  // plain body, never the { body, metadata } envelope from the
+  // InvokeResponse union introduced in @forge/bridge 6.
   return invoke<TResponseShape>(
     resolverFunctionKey ?? defaultResolverFunctionKey,
     options
-  );
+  ) as Promise<TResponseShape>;
 };
