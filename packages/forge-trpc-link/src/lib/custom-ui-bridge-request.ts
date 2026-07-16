@@ -1,6 +1,6 @@
 import { TRPCClientRuntime } from '@trpc/client';
 import type { ProcedureType } from '@trpc/server';
-import type { TRPCResponse } from '@trpc/server/dist/rpc';
+import type { TRPCResponse } from '@trpc/server/rpc';
 import { invoke } from '@forge/bridge';
 import {
   defaultResolverFunctionKey,
