@@ -8,7 +8,11 @@ Custom [tRCP adapter](https://trpc.io/docs/adapters) to enable tRPC for [Atlassi
 npm install @toolsplus/forge-trpc-adapter
 ```
 
-Note that this package has a peer dependency on `@forge/resolver`. If you have not installed `@forge/resolver` you may install before installing this package.
+Note that this package declares `@forge/resolver` (`^1.4.8 || ^2.0.0`) as a peer dependency. Forge apps typically already have it installed. If your app does not, install it alongside this package:
+
+```
+npm install @forge/resolver
+```
 
 ## Usage
 

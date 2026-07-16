@@ -1,6 +1,6 @@
 import { TRPCClientRuntime } from '@trpc/client';
 import type { ProcedureType } from '@trpc/server';
-import type { TRPCResponse } from '@trpc/server/dist/rpc';
+import type { TRPCResponse } from '@trpc/server/rpc';
 import { invoke } from '@forge/bridge';
 import {
   defaultResolverFunctionKey,
@@ -58,8 +58,11 @@ export const customUiBridgeRequest = <TResponseShape = TRPCResponse>(
     isBatchCall,
   };
 
+  // This call never passes invoke metadata, so the response is always the
+  // plain body, never the { body, metadata } envelope from the
+  // InvokeResponse union introduced in @forge/bridge 6.
   return invoke<TResponseShape>(
     resolverFunctionKey ?? defaultResolverFunctionKey,
     options
-  );
+  ) as Promise<TResponseShape>;
 };

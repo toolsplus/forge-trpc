@@ -9,8 +9,6 @@
   },
   "private": true,
   "dependencies": {
-    "@forge/bridge": "^3.3.0",
-    "@forge/resolver": "^1.5.29",
     "@trpc/client": "^11.0.0",
     "@trpc/server": "^11.0.0",
     "fp-ts": "^2.13.1",
@@ -20,6 +18,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
+    "@forge/bridge": "^6.0.0",
+    "@forge/resolver": "^2.0.0",
     "@nx/eslint": "18.1.2",
     "@nx/eslint-plugin": "18.1.2",
     "@nx/jest": "18.1.2",

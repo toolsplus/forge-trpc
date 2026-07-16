@@ -170,8 +170,8 @@ const callProcedures = <TRouter extends AnyRouter>({
 
   return pipe(
     paths,
-    A.mapWithIndex((index, path) => ({ path, input: inputs[index] })),
-    A.map(({ path, input }) =>
+    A.mapWithIndex((index, path) => ({ index, path, input: inputs[index] })),
+    A.map(({ index, path, input }) =>
       pipe(
         TE.tryCatch(
           () =>
@@ -182,6 +182,7 @@ const callProcedures = <TRouter extends AnyRouter>({
               ctx,
               type: callOptions.type,
               signal: undefined,
+              batchIndex: index,
             }),
           (cause) => {
             const error = getTRPCErrorFromUnknown(cause);
