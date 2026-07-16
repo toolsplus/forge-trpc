@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 jobs:
   release:
     name: Release
@@ -16,11 +17,12 @@ jobs:
         with:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         name: Setup Node.js
         with:
-          node-version: 'lts/*'
+          node-version: '24'
           registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
       - name: Install dependencies
         run: npm clean-install
       - name: Build and test
@@ -31,8 +33,6 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
         run: |
           git config user.name "Release Bot"
           git config user.email "<>"
